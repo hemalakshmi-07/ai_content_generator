@@ -1,53 +1,311 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>AI Content Generator</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Content Generator - Professional</title>
 <style>
-body{font-family:Arial;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}
-.container{background:white;border-radius:15px;box-shadow:0 20px 60px rgba(0,0,0,0.3);max-width:700px;width:100%;padding:40px}
-h1{color:#667eea;text-align:center}
-.form-group{margin:20px 0}
-label{display:block;margin-bottom:8px;font-weight:bold}
-textarea,select{width:100%;padding:12px;border:2px solid #ddd;border-radius:8px;font-size:1em}
-button{width:100%;padding:14px;background:#667eea;color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin-top:10px}
-#result{margin-top:30px;padding:20px;background:#f8f9fa;border-radius:8px;display:none;min-height:100px}
-.loading{text-align:center;color:#667eea;display:none}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+.container { max-width: 1200px; margin: 0 auto; }
+header { text-align: center; color: white; margin-bottom: 30px; padding: 30px 0; }
+header h1 { font-size: 2.5em; margin-bottom: 10px; }
+header p { font-size: 1.1em; opacity: 0.9; }
+.main-content { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px; }
+.panel { background: white; border-radius: 15px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); padding: 30px; }
+.panel h2 { color: #667eea; margin-bottom: 20px; font-size: 1.5em; }
+.tabs-section { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+.tab-btn { padding: 12px; border: 2px solid #ddd; background: white; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.3s; }
+.tab-btn.active { background: #667eea; color: white; border-color: #667eea; }
+.tab-btn:hover { border-color: #667eea; }
+.form-group { margin-bottom: 15px; }
+label { display: block; margin-bottom: 8px; color: #333; font-weight: 600; }
+textarea, select, input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 0.95em; font-family: inherit; transition: border-color 0.3s; }
+textarea:focus, select:focus, input:focus { outline: none; border-color: #667eea; }
+textarea { min-height: 120px; resize: vertical; }
+.presets { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; }
+.preset-btn { padding: 10px; border: 2px solid #ddd; background: white; border-radius: 8px; cursor: pointer; font-size: 0.9em; transition: all 0.3s; }
+.preset-btn:hover { background: #f0f0f0; }
+.preset-btn.selected { background: #667eea; color: white; border-color: #667eea; }
+.slider-group { margin-bottom: 15px; }
+.slider-label { display: flex; justify-content: space-between; margin-bottom: 8px; }
+input[type="range"] { width: 100%; height: 6px; padding: 0; }
+button { width: 100%; padding: 14px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-size: 1em; font-weight: 600; cursor: pointer; transition: all 0.3s; margin-top: 10px; }
+button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4); }
+button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+.result-panel { display: flex; flex-direction: column; }
+.result-box { background: #f8f9fa; border: 2px solid #e0e0f0; border-radius: 8px; padding: 20px; min-height: 200px; max-height: 400px; overflow-y: auto; line-height: 1.6; color: #333; margin-bottom: 15px; flex-grow: 1; }
+.result-empty { text-align: center; color: #999; font-style: italic; padding: 40px 20px; }
+.result-meta { background: #e8eef7; padding: 12px; border-radius: 5px; font-size: 0.9em; color: #555; margin-bottom: 15px; }
+.meta-item { display: inline-block; margin-right: 20px; }
+.meta-label { font-weight: 600; color: #667eea; }
+.action-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.action-buttons button { margin: 0; }
+.loading { display: none; text-align: center; color: #667eea; padding: 20px; }
+.spinner { border: 3px solid #f3f3f3; border-top: 3px solid #667eea; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 10px; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+.error { background: #f8d7da; color: #721c24; padding: 15px; border-radius: 8px; margin-bottom: 15px; display: none; }
+.error.show { display: block; }
+.success { background: #d4edda; color: #155724; padding: 15px; border-radius: 8px; margin-bottom: 15px; display: none; }
+.success.show { display: block; }
+.char-count { font-size: 0.85em; color: #999; margin-top: 5px; }
+.history-item { background: #f0f0f0; padding: 10px; border-radius: 5px; margin-bottom: 10px; cursor: pointer; transition: all 0.3s; }
+.history-item:hover { background: #e0e0e0; }
+@media (max-width: 768px) {
+  .main-content { grid-template-columns: 1fr; }
+  .tabs-section { grid-template-columns: repeat(2, 1fr); }
+  header h1 { font-size: 1.8em; }
+}
 </style>
 </head>
 <body>
+
 <div class="container">
-<h1>✨ AI Content Generator</h1>
-<div class="form-group">
-<label>What to write?</label>
-<textarea id="prompt" placeholder="Example: Blog about AI"></textarea>
+  <header>
+    <h1>✨ AI Content Generator Pro</h1>
+    <p>Professional AI-Powered Content Creation Platform</p>
+  </header>
+
+  <div class="main-content">
+    <div class="panel">
+      <h2>📝 Create Content</h2>
+      <div id="error" class="error"></div>
+      <div id="success" class="success"></div>
+      <label>Content Type</label>
+      <div class="tabs-section">
+        <button class="tab-btn active" onclick="selectType('blog')">📝 Blog</button>
+        <button class="tab-btn" onclick="selectType('email')">📧 Email</button>
+        <button class="tab-btn" onclick="selectType('social')">📱 Social</button>
+        <button class="tab-btn" onclick="selectType('product')">🛍️ Product</button>
+      </div>
+      <div class="form-group">
+        <label>What should I write about? *</label>
+        <textarea id="prompt" placeholder="Example: Write a blog post about AI productivity tools..."></textarea>
+        <div class="char-count"><span id="charCount">0</span> characters</div>
+      </div>
+      <div class="form-group">
+        <label>Quick Templates</label>
+        <div class="presets">
+          <button class="preset-btn" onclick="insertPreset('Write a comprehensive blog post about')">📚 Blog Guide</button>
+          <button class="preset-btn" onclick="insertPreset('Write a professional email about')">✉️ Email</button>
+          <button class="preset-btn" onclick="insertPreset('Create a viral social media post about')">🔥 Viral Post</button>
+          <button class="preset-btn" onclick="insertPreset('Write product description for')">💎 Product</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Tone</label>
+        <select id="tone">
+          <option value="professional">Professional & Formal</option>
+          <option value="casual">Casual & Friendly</option>
+          <option value="creative">Creative & Engaging</option>
+          <option value="funny">Humorous & Witty</option>
+          <option value="inspiring">Inspiring & Motivational</option>
+          <option value="technical">Technical & Detailed</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Target Audience</label>
+        <input type="text" id="audience" placeholder="e.g., Business Managers, Students, Tech Enthusiasts">
+      </div>
+      <div class="slider-group">
+        <div class="slider-label">
+          <label>Length</label>
+          <span id="wordCountDisplay">500 words</span>
+        </div>
+        <input type="range" id="wordCount" min="100" max="2000" value="500" oninput="updateWordCount()">
+      </div>
+      <div class="form-group">
+        <label>Language</label>
+        <select id="language">
+          <option value="english">English</option>
+          <option value="spanish">Spanish</option>
+          <option value="french">French</option>
+          <option value="german">German</option>
+          <option value="portuguese">Portuguese</option>
+        </select>
+      </div>
+      <button onclick="generateContent()" id="generateBtn">🚀 Generate Content</button>
+    </div>
+
+    <div class="panel result-panel">
+      <h2>✨ Generated Content</h2>
+      <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <p>Generating your content... (5-10 seconds)</p>
+      </div>
+      <div id="resultMeta" class="result-meta" style="display: none;">
+        <div class="meta-item"><span class="meta-label">Type:</span> <span id="metaType">-</span></div>
+        <div class="meta-item"><span class="meta-label">Words:</span> <span id="metaWords">-</span></div>
+        <div class="meta-item"><span class="meta-label">Generated:</span> <span id="metaTime">-</span></div>
+      </div>
+      <div id="resultBox" class="result-box">
+        <div class="result-empty">Your generated content will appear here...</div>
+      </div>
+      <div class="action-buttons">
+        <button id="copyBtn" onclick="copyContent()" style="display: none;">📋 Copy</button>
+        <button id="downloadBtn" onclick="downloadContent()" style="display: none;">⬇️ Download</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>📜 Recent Generations</h2>
+    <div id="history" style="max-height: 200px; overflow-y: auto;"></div>
+  </div>
 </div>
-<div class="form-group">
-<label>Type</label>
-<select id="type">
-<option>Blog</option>
-<option>Email</option>
-<option>Social</option>
-<option>Product</option>
-</select>
-</div>
-<button onclick="generate()">Generate</button>
-<div class="loading"><p>Generating...</p></div>
-<div id="result"></div>
-</div>
+
 <script>
 const BACKEND = 'https://ai-content-generator-production-a3e06c2d.railway.app';
-async function generate(){
+let currentResult = '';
+let currentType = 'blog';
+let generationHistory = [];
+
+function selectType(type) {
+  currentType = type;
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+function updateWordCount() {
+  const count = document.getElementById('wordCount').value;
+  document.getElementById('wordCountDisplay').textContent = count + ' words';
+}
+
+function insertPreset(text) {
+  const prompt = document.getElementById('prompt');
+  prompt.value = text;
+  updateCharCount();
+}
+
+function updateCharCount() {
+  const count = document.getElementById('prompt').value.length;
+  document.getElementById('charCount').textContent = count;
+}
+
+document.getElementById('prompt').addEventListener('input', updateCharCount);
+
+async function generateContent() {
   const prompt = document.getElementById('prompt').value;
-  if(!prompt){alert('Enter prompt');return;}
-  document.querySelector('.loading').style.display='block';
-  try{
-    const res = await fetch(BACKEND + '/generate', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({prompt, type: document.getElementById('type').value, tone:'professional'})});
-    const data = await res.json();
-    document.getElementById('result').innerText = data.content || data.error;
-    document.getElementById('result').style.display = 'block';
-  }catch(e){alert('Error: ' + e);}
-  document.querySelector('.loading').style.display='none';
+  if (!prompt.trim()) {
+    showError('Please enter what you want to write about');
+    return;
+  }
+  const tone = document.getElementById('tone').value;
+  const audience = document.getElementById('audience').value || 'General';
+  const wordCount = document.getElementById('wordCount').value;
+  const language = document.getElementById('language').value;
+  showLoading();
+  clearError();
+  const startTime = Date.now();
+  try {
+    const response = await fetch(BACKEND + '/generate', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        prompt: prompt,
+        type: currentType,
+        tone: tone,
+        audience: audience,
+        word_count: wordCount,
+        language: language
+      })
+    });
+    const data = await response.json();
+    if (data.error) {
+      showError(data.error);
+    } else {
+      currentResult = data.content;
+      const generationTime = ((Date.now() - startTime) / 1000).toFixed(1);
+      displayResult(data.content, generationTime);
+      addToHistory(currentType, prompt.substring(0, 50));
+      showSuccess('✅ Content generated successfully!');
+    }
+  } catch(e) {
+    showError('Connection error: ' + e.message);
+    console.error('Error:', e);
+  }
+  hideLoading();
+}
+
+function displayResult(content, time) {
+  const resultBox = document.getElementById('resultBox');
+  resultBox.innerHTML = content.replace(/\n/g, '<br>');
+  document.getElementById('resultMeta').style.display = 'block';
+  document.getElementById('metaType').textContent = currentType;
+  document.getElementById('metaWords').textContent = content.split(' ').length;
+  document.getElementById('metaTime').textContent = time + 's';
+  document.getElementById('copyBtn').style.display = 'block';
+  document.getElementById('downloadBtn').style.display = 'block';
+}
+
+function copyContent() {
+  navigator.clipboard.writeText(currentResult).then(() => {
+    showSuccess('✅ Copied to clipboard!');
+    setTimeout(clearSuccess, 2000);
+  });
+}
+
+function downloadContent() {
+  const element = document.createElement('a');
+  const file = new Blob([currentResult], {type: 'text/plain'});
+  element.href = URL.createObjectURL(file);
+  element.download = `${currentType}_${Date.now()}.txt`;
+  document.body.appendChild(element);
+  element.click();
+  document.body.removeChild(element);
+  showSuccess('✅ Downloaded!');
+  setTimeout(clearSuccess, 2000);
+}
+
+function addToHistory(type, prompt) {
+  const time = new Date().toLocaleTimeString();
+  generationHistory.unshift({type, prompt, time});
+  if (generationHistory.length > 10) generationHistory.pop();
+  updateHistoryDisplay();
+}
+
+function updateHistoryDisplay() {
+  const historyDiv = document.getElementById('history');
+  historyDiv.innerHTML = generationHistory.map((item, index) => 
+    `<div class="history-item" onclick="loadHistory(${index})">
+      <strong>${item.type}</strong>: ${item.prompt} <span style="float:right; font-size: 0.8em; color: #999;">${item.time}</span>
+    </div>`
+  ).join('');
+}
+
+function loadHistory(index) {
+  const item = generationHistory[index];
+  document.getElementById('prompt').value = item.prompt;
+}
+
+function showError(message) {
+  const errorDiv = document.getElementById('error');
+  errorDiv.textContent = message;
+  errorDiv.classList.add('show');
+}
+
+function clearError() {
+  document.getElementById('error').classList.remove('show');
+}
+
+function showSuccess(message) {
+  const successDiv = document.getElementById('success');
+  successDiv.textContent = message;
+  successDiv.classList.add('show');
+}
+
+function clearSuccess() {
+  document.getElementById('success').classList.remove('show');
+}
+
+function showLoading() {
+  document.getElementById('loading').style.display = 'block';
+}
+
+function hideLoading() {
+  document.getElementById('loading').style.display = 'none';
 }
 </script>
+
 </body>
 </html>

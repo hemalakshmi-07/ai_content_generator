@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AI Content Generator</title>
+<style>
+body{font-family:Arial;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}
+.container{background:white;border-radius:15px;box-shadow:0 20px 60px rgba(0,0,0,0.3);max-width:700px;width:100%;padding:40px}
+h1{color:#667eea;text-align:center}
+.form-group{margin:20px 0}
+label{display:block;margin-bottom:8px;font-weight:bold}
+textarea,select{width:100%;padding:12px;border:2px solid #ddd;border-radius:8px;font-size:1em}
+button{width:100%;padding:14px;background:#667eea;color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin-top:10px}
+#result{margin-top:30px;padding:20px;background:#f8f9fa;border-radius:8px;display:none;min-height:100px}
+.loading{text-align:center;color:#667eea;display:none}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>✨ AI Content Generator</h1>
+<div class="form-group">
+<label>What to write?</label>
+<textarea id="prompt" placeholder="Example: Blog about AI"></textarea>
+</div>
+<div class="form-group">
+<label>Type</label>
+<select id="type">
+<option>Blog</option>
+<option>Email</option>
+<option>Social</option>
+<option>Product</option>
+</select>
+</div>
+<button onclick="generate()">Generate</button>
+<div class="loading"><p>Generating...</p></div>
+<div id="result"></div>
+</div>
+<script>
+const BACKEND = 'https://ai-content-generator-production-a3e06c2d.railway.app';
+async function generate(){
+  const prompt = document.getElementById('prompt').value;
+  if(!prompt){alert('Enter prompt');return;}
+  document.querySelector('.loading').style.display='block';
+  try{
+    const res = await fetch(BACKEND + '/generate', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({prompt, type: document.getElementById('type').value, tone:'professional'})});
+    const data = await res.json();
+    document.getElementById('result').innerText = data.content || data.error;
+    document.getElementById('result').style.display = 'block';
+  }catch(e){alert('Error: ' + e);}
+  document.querySelector('.loading').style.display='none';
+}
+</script>
+</body>
+</html>

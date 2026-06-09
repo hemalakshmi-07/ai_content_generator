@@ -1,0 +1,32 @@
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  try {
+    const { prompt, type, tone, audience, language, word_count } = req.body;
+    const apiKey = process.env.HUGGINGFACE_API_KEY;
+
+    const fullPrompt = `Write a ${type} about: ${prompt}
+Tone: ${tone}
+Audience: ${audience}
+Language: ${language}
+Length: ${word_count} words`;
+
+    const response = await fetch(
+      'https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1',
+      {
+        headers: { Authorization: `Bearer ${apiKey}` },
+        method: 'POST',
+        body: JSON.stringify({ inputs: fullPrompt }),
+      }
+    );
+
+    const result = await response.json();
+    const content = result[0]?.generated_text || 'Content generated';
+
+    return res.status(200).json({ content, success: true });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+}

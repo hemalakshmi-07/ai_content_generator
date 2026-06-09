@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional AI-Powered Content Creation Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .panel-title {
+            display: flex;
+            align-items: center;
+            font-size: 1.5em;
+            margin-bottom: 25px;
+            color: #667eea;
+        }
+
+        .panel-title span {
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+
+        .content-type-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .type-btn {
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .type-btn:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .type-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        label {
+            display: block;
+            margin-top: 20px;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .char-count {
+            font-size: 0.85em;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .slider-container {
+            margin-top: 20px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            border: none;
+        }
+
+        .slider-value {
+            text-align: center;
+            margin-top: 10px;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .templates {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .template-btn {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .template-btn:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .generate-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+
+        .output-box {
+            background: #f8f9fa;
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-style: italic;
+        }
+
+        .output-box.has-content {
+            background: white;
+            border: 2px solid #667eea;
+            color: #333;
+            font-style: normal;
+            align-items: flex-start;
+        }
+
+        .output-content {
+            line-height: 1.8;
+            font-size: 1em;
+        }
+
+        .output-meta {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #ddd;
+        }
+
+        .meta-item {
+            text-align: center;
+        }
+
+        .meta-label {
+            font-size: 0.85em;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .meta-value {
+            font-size: 1.3em;
+            color: #667eea;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .history-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #ddd;
+        }
+
+        .history-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .history-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .history-item:hover {
+            background: #e0e5ff;
+        }
+
+        .loading {
+            text-align: center;
+            color: #667eea;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: #fee;
+            border: 2px solid #f99;
+            color: #c33;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .success-message {
+            background: #efe;
+            border: 2px solid #9f9;
+            color: #3c3;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .content-type-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .demo-badge {
+            display: inline-block;
+            background: #ffc107;
+            color: #333;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            margin-left: 10px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✨ Professional AI-Powered Content Creation Platform <span class="demo-badge">DEMO MODE</span></h1>
+        </div>
+
+        <div class="main-content">
+            <!-- Create Content Panel -->
+            <div class="panel">
+                <div class="panel-title">
+                    <span>📝</span>
+                    <span>Create Content</span>
+                </div>
+
+                <div class="content-type-buttons">
+                    <button class="type-btn active" onclick="setType('blog')">
+                        <span>📝</span> Blog
+                    </button>
+                    <button class="type-btn" onclick="setType('email')">
+                        <span>📧</span> Email
+                    </button>
+                    <button class="type-btn" onclick="setType('social')">
+                        <span>📱</span> Social
+                    </button>
+                    <button class="type-btn" onclick="setType('product')">
+                        <span>📦</span> Product
+                    </button>
+                </div>
+
+                <label>What should I write about? *</label>
+                <textarea id="userPrompt" placeholder="Enter your topic or idea..."></textarea>
+                <div class="char-count"><span id="charCount">0</span> characters</div>
+
+                <label>Quick Templates:</label>
+                <div class="templates">
+                    <button class="template-btn" onclick="useTemplate('Write about latest AI trends')">🤖 AI Trends</button>
+                    <button class="template-btn" onclick="useTemplate('How to improve productivity')">⚡ Productivity</button>
+                    <button class="template-btn" onclick="useTemplate('Digital marketing tips')">📊 Marketing</button>
+                    <button class="template-btn" onclick="useTemplate('Technology news summary')">💻 Tech News</button>
+                </div>
+
+                <label>Tone:</label>
+                <select id="tone">
+                    <option>Professional</option>
+                    <option>Casual</option>
+                    <option>Creative</option>
+                    <option>Funny</option>
+                    <option>Inspiring</option>
+                </select>
+
+                <label>Target Audience:</label>
+                <input type="text" id="audience" placeholder="e.g., Tech professionals, Students, Business owners">
+
+                <label>Language:</label>
+                <select id="language">
+                    <option>English</option>
+                    <option>Spanish</option>
+                    <option>French</option>
+                    <option>German</option>
+                    <option>Portuguese</option>
+                </select>
+
+                <label>Target Word Count:</label>
+                <div class="slider-container">
+                    <input type="range" id="wordCount" min="100" max="2000" value="500" oninput="updateWordCount()">
+                    <div class="slider-value"><span id="wordCountDisplay">500</span> words</div>
+                </div>
+
+                <button class="generate-btn" onclick="generateContent()">🚀 Generate Content</button>
+            </div>
+
+            <!-- Generated Content Panel -->
+            <div class="panel">
+                <div class="panel-title">
+                    <span>✨</span>
+                    <span>Generated Content</span>
+                </div>
+
+                <div id="outputBox" class="output-box">
+                    Your generated content will appear here...
+                </div>
+
+                <div id="outputMeta" class="output-meta" style="display: none;">
+                    <div class="meta-item">
+                        <div class="meta-label">Type</div>
+                        <div class="meta-value" id="metaType">Blog</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Words</div>
+                        <div class="meta-value" id="metaWords">0</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Time</div>
+                        <div class="meta-value" id="metaTime">0s</div>
+                    </div>
+                </div>
+
+                <div class="button-group" id="actionButtons" style="display: none;">
+                    <button class="btn" onclick="copyContent()">📋 Copy</button>
+                    <button class="btn" onclick="downloadContent()">💾 Download</button>
+                </div>
+
+                <div class="history-section">
+                    <div class="history-title">📜 Generation History (Last 5)</div>
+                    <div class="history-list" id="historyList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentType = 'blog';
+        let generationHistory = [];
+
+        // Demo content templates
+        const demoContent = {
+            blog: {
+                "AI Trends": "The Future of Artificial Intelligence in 2024\n\nArtificial Intelligence continues to reshape our world in unprecedented ways. From healthcare to education, AI technologies are driving innovation and creating new possibilities. Machine learning models are becoming more sophisticated, enabling personalized experiences across industries.\n\nThe rise of large language models has democratized AI access, allowing businesses of all sizes to leverage powerful tools. Natural Language Processing is revolutionizing customer service, content creation, and data analysis.\n\nAs we move forward, the focus shifts to ethical AI development, ensuring these powerful tools benefit society while minimizing risks. The integration of AI with quantum computing promises even more transformative changes.\n\nStaying updated with AI trends is crucial for professionals seeking to remain competitive in an increasingly digital world.",
+                "productivity": "10 Proven Strategies to Boost Your Productivity\n\n1. Time Blocking: Allocate specific time blocks for different tasks to maintain focus and prevent context switching.\n\n2. The Pomodoro Technique: Work in 25-minute intervals with short breaks to maintain mental clarity and prevent burnout.\n\n3. Prioritization Matrix: Use the Eisenhower Matrix to distinguish between urgent and important tasks.\n\n4. Digital Detox: Minimize notifications and distractions by scheduling specific times for email and social media.\n\n5. Goal Setting: Set SMART goals (Specific, Measurable, Achievable, Relevant, Time-bound) for better direction.\n\n6. Automation: Leverage tools to automate repetitive tasks and free up time for strategic work.\n\n7. Delegation: Learn to delegate tasks that others can handle to focus on high-impact activities.\n\n8. Regular Reviews: Weekly reviews help you track progress and adjust strategies as needed.\n\nBy implementing these strategies, you'll notice significant improvements in your productivity and overall work satisfaction.",
+                "default": "The Power of Digital Transformation\n\nIn today's rapidly evolving business landscape, digital transformation is no longer optional—it's essential. Organizations that successfully embrace digital technologies gain competitive advantages and unlock new growth opportunities.\n\nDigital transformation encompasses far more than simply adopting new software. It requires a fundamental shift in organizational culture, processes, and mindset. Companies must invest in employee training, update legacy systems, and foster innovation throughout their teams.\n\nThe benefits are substantial: improved efficiency, enhanced customer experiences, better data insights, and increased agility. Companies that prioritize digital transformation report higher employee satisfaction and stronger financial performance.\n\nAs technology continues to evolve, the journey toward digital transformation becomes increasingly important for business survival and growth in competitive markets."
+            },
+            email: {
+                "default": "Subject: Exciting New Opportunities for Growth\n\nDear Team,\n\nI hope this message finds you well. I wanted to share some exciting developments that we believe will significantly impact our organization's trajectory.\n\nOver the past few months, we've been working on strategic initiatives to enhance our capabilities and expand our market presence. The results have been encouraging, and we're now ready to move forward with the next phase.\n\nYour contribution has been invaluable to this success. As we move ahead, we'll need your continued support and expertise to execute our plans effectively.\n\nPlease join us for a brief meeting next week to discuss how these changes will affect your role and how we can best support your professional growth.\n\nThank you for your dedication and commitment.\n\nBest regards,\nManagement"
+            },
+            social: {
+                "default": "🚀 Did you know? Companies that embrace AI technology see a 40% increase in productivity! 💼\n\nIt's time to transform your business. Whether you're a startup or an established enterprise, AI-powered solutions can streamline operations, reduce costs, and unlock new growth opportunities.\n\nThe future is here. Are you ready? 🎯\n\n#AI #Technology #Innovation #FutureOfWork #DigitalTransformation"
+            },
+            product: {
+                "default": "Introducing NextGen Pro - The Ultimate Solution for Modern Professionals\n\nExperience the power of advanced technology designed specifically for your needs. NextGen Pro combines intuitive interface with powerful features to deliver unmatched performance.\n\nKey Features:\n• Lightning-fast processing speeds\n• Seamless integration with existing systems\n• 24/7 customer support\n• Enterprise-grade security\n• Customizable workflows\n\nWith NextGen Pro, you'll accomplish more in less time. Join thousands of satisfied customers who have already transformed their operations.\n\nReady to elevate your productivity? Get started today with our 30-day free trial. No credit card required."
+            }
+        };
+
+        function setType(type) {
+            currentType = type;
+            document.querySelectorAll('.type-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.closest('.type-btn').classList.add('active');
+        }
+
+        function updateWordCount() {
+            const count = document.getElementById('wordCount').value;
+            document.getElementById('wordCountDisplay').textContent = count;
+        }
+
+        function useTemplate(template) {
+            document.getElementById('userPrompt').value = template;
+            document.getElementById('charCount').textContent = template.length;
+        }
+
+        function generateContent() {
+            const prompt = document.getElementById('userPrompt').value;
+            const tone = document.getElementById('tone').value;
+            const audience = document.getElementById('audience').value;
+            const language = document.getElementById('language').value;
+            const wordCount = document.getElementById('wordCount').value;
+
+            if (!prompt) {
+                alert('Please enter a topic');
+                return;
+            }
+
+            const outputBox = document.getElementById('outputBox');
+            outputBox.innerHTML = '<div class="loading"><div class="spinner"></div><p>Generating content...</p></div>';
+
+            // Simulate API call delay
+            setTimeout(() => {
+                // Select demo content
+                let content = demoContent[currentType]['default'];
+                
+                // Try to match with keywords in the prompt
+                const lowerPrompt = prompt.toLowerCase();
+                if (lowerPrompt.includes('ai') || lowerPrompt.includes('artificial')) {
+                    content = demoContent.blog['AI Trends'] || content;
+                } else if (lowerPrompt.includes('productivity') || lowerPrompt.includes('efficient')) {
+                    content = demoContent.blog['productivity'] || content;
+                }
+
+                displayContent(content, prompt);
+            }, 1500);
+        }
+
+        function displayContent(content, prompt) {
+            const outputBox = document.getElementById('outputBox');
+            const outputMeta = document.getElementById('outputMeta');
+            const actionButtons = document.getElementById('actionButtons');
+
+            outputBox.classList.add('has-content');
+            outputBox.innerHTML = `<div class="output-content">${content}</div>`;
+
+            // Update metadata
+            const wordCount = content.split(/\s+/).length;
+            document.getElementById('metaType').textContent = currentType.charAt(0).toUpperCase() + currentType.slice(1);
+            document.getElementById('metaWords').textContent = wordCount;
+            document.getElementById('metaTime').textContent = '1.5s';
+
+            outputMeta.style.display = 'grid';
+            actionButtons.style.display = 'grid';
+
+            // Add to history
+            const historyItem = {
+                type: currentType,
+                prompt: prompt,
+                content: content,
+                time: new Date().toLocaleTimeString()
+            };
+            generationHistory.unshift(historyItem);
+            if (generationHistory.length > 5) generationHistory.pop();
+            updateHistory();
+        }
+
+        function updateHistory() {
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = generationHistory.map((item, index) => 
+                `<div class="history-item" onclick="loadHistory(${index})">
+                    <strong>${item.type}</strong> - ${item.prompt.substring(0, 30)}...
+                    <br><small>${item.time}</small>
+                </div>`
+            ).join('');
+        }
+
+        function loadHistory(index) {
+            displayContent(generationHistory[index].content, generationHistory[index].prompt);
+        }
+
+        function copyContent() {
+            const content = document.querySelector('.output-content').textContent;
+            navigator.clipboard.writeText(content).then(() => {
+                alert('Content copied to clipboard!');
+            });
+        }
+
+        function downloadContent() {
+            const content = document.querySelector('.output-content').textContent;
+            const element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content));
+            element.setAttribute('download', `content-${currentType}-${Date.now()}.txt`);
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        }
+
+        // Update character count
+        document.getElementById('userPrompt').addEventListener('input', function() {
+            document.getElementById('charCount').textContent = this.value.length;
+        });
+    </script>
+</body>
+</html>
